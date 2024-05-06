@@ -23,6 +23,6 @@ Saya membuat program sederhana dari ecommerce sederhana
    3. Struktur folder sudah memisahkan antara Model, Repository dan Service untuk mempermudah pengembangan aplikasi.
    4. Authentication sudah menggunakan JWT dengan
    5. Sudah ter-Dockerize untuk memudakan deploy kedalam server
-3.  struktur database ![db diagram](/db-diagram.png)
+3.  struktur database ![db diagram](db-diagram.png)
 
 ## [Postman Collection](https://www.postman.com/oa-oe-oa-oe/workspace/qbit-septian/collection/21858721-dce892d8-ce2f-4ecb-8c1f-c5de37d3a45b)
