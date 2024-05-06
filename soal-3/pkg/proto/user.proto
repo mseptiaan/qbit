@@ -1,0 +1,22 @@
+syntax = "proto3";
+
+option go_package = "github.com/mseptian/qbit/internal/pb";
+
+import "google/api/annotations.proto";
+import "auth.proto";
+
+service User {
+  rpc GetUser(Empty) returns (MsgResGetUser) {
+    option (google.api.http) = {
+      get: "/v1/user",
+    };
+  }
+}
+
+message MsgResGetUser {
+  string userId = 1 [ json_name = "userId" ];
+  string email = 2 [ json_name = "email" ];
+  string name = 3 [ json_name = "name" ];
+}
+
+// protoc -I ./pkg/proto --go_out ./internal/pb --go_opt paths=source_relative --go-grpc_out ./internal/pb --go-grpc_opt paths=source_relative --grpc-gateway_out ./internal/pb --grpc-gateway_opt paths=source_relative ./pkg/proto/*.proto

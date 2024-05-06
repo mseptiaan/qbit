@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+option go_package = "github.com/mseptian/qbit/internal/pb";
+
+import "google/api/annotations.proto";
+
+service Auth {
+  rpc PostLogin (MsgReqPostLogin) returns (MsgRespPostLogin) {
+    option (google.api.http) = {
+      post: "/v1/auth/login"
+      body: "*"
+    };
+  }
+
+  rpc PostRegister (MsgReqPostRegister) returns (DataEmpty) {
+    option (google.api.http) = {
+      post: "/v1/auth/register"
+      body: "*"
+    };
+  }
+}
+
+message MsgReqPostLogin {
+  string email = 1 [ json_name = "email" ]; // @gotags: validate:"required,email"
+  string password = 2 [ json_name = "password" ]; // @gotags: validate:"required,is-password"
+}
+
+message MsgRespPostLogin {
+  message DataPostLogin {
+    string token = 1 [ json_name = "token" ];
+  }
+  bool error = 1 [ json_name = "error" ];
+  string msg = 2 [ json_name = "msg" ];
+  DataPostLogin data = 3 [ json_name = "data" ];
+}
+
+message MsgReqPostRegister {
+  string email = 1 [ json_name = "email" ]; // @gotags: validate:"required,email"
+  string password = 2 [ json_name = "password" ]; // @gotags: validate:"required,is-password"
+  string name = 3 [ json_name = "name" ]; // @gotags: validate:"required,min=3"
+}
+
+message Empty {}
+
+message DataEmpty {
+  bool error = 1 [ json_name = "error" ];
+  string msg = 2 [ json_name = "msg" ];
+  Empty data = 3 [ json_name = "data" ];
+}
+
+// protoc -I ./pkg/proto --go_out ./internal/pb --go_opt paths=source_relative --go-grpc_out ./internal/pb --go-grpc_opt paths=source_relative --grpc-gateway_out ./internal/pb --grpc-gateway_opt paths=source_relative ./pkg/proto/*.proto

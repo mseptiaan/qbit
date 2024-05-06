@@ -1,0 +1,46 @@
+syntax = "proto3";
+
+option go_package = "github.com/mseptian/qbit/internal/pb";
+
+import "google/api/annotations.proto";
+import "auth.proto";
+
+service Cart {
+  rpc GetCart(Empty) returns (MsgArrProductResp) {
+    option (google.api.http) = {
+      get: "/v1/cart",
+    };
+  }
+
+  rpc PostAddToCart(MsrReqPostAddToCart) returns (DataEmpty) {
+    option (google.api.http) = {
+      post: "/v1/cart",
+      body: "*"
+    };
+  }
+
+  rpc GetCheckout(Empty) returns (DataEmpty) {
+    option (google.api.http) = {
+      get: "/v1/cart/checkout",
+    };
+  }
+}
+
+message MsrReqPostAddToCart {
+  string productId = 1 [ json_name = "productId" ]; // @gotags: validate:"required"
+  uint32 qty = 2 [ json_name = "qty" ]; // @gotags: validate:"required,gt=0"
+}
+
+message MsgProductResp {
+  string uuid = 1 [ json_name = "uuid" ];
+  string name = 2 [ json_name = "name" ];
+  uint32 qty = 3 [ json_name = "qty" ];
+  uint32 price = 4 [ json_name = "price" ];
+}
+
+message MsgArrProductResp {
+  repeated MsgProductResp items = 1;
+  uint32 total = 2 [ json_name = "total" ];
+}
+
+// protoc -I ./pkg/proto --go_out ./internal/pb --go_opt paths=source_relative --go-grpc_out ./internal/pb --go-grpc_opt paths=source_relative --grpc-gateway_out ./internal/pb --grpc-gateway_opt paths=source_relative ./pkg/proto/*.proto

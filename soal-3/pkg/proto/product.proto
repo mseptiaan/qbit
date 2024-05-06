@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+option go_package = "github.com/mseptian/qbit/internal/pb";
+
+import "google/api/annotations.proto";
+import "auth.proto";
+
+service Product {
+  rpc GetProduct(Empty) returns (MsgArrProduct) {
+    option (google.api.http) = {
+      get: "/v1/product",
+    };
+  }
+
+  rpc GetProductSearch(MsgReqGetProductSearch) returns (MsgArrProduct) {
+    option (google.api.http) = {
+      get: "/v1/product/search/{search}",
+    };
+  }
+
+  rpc GetProductId(MsgReqGetProductId) returns (MsgProduct) {
+    option (google.api.http) = {
+      get: "/v1/product/get/{productId}",
+    };
+  }
+}
+
+message MsgReqGetProductId {
+  string productId = 1;
+}
+
+message MsgReqGetProductSearch {
+  string search = 1;
+}
+
+message MsgProduct {
+  string uuid = 1 [ json_name = "uuid" ];
+  string name = 2 [ json_name = "name" ];
+  uint32 qty = 3 [ json_name = "qty" ];
+  uint32 price = 4 [ json_name = "price" ];
+}
+
+message MsgArrProduct {
+  repeated MsgProduct items = 1;
+}
+
+// protoc -I ./pkg/proto --go_out ./internal/pb --go_opt paths=source_relative --go-grpc_out ./internal/pb --go-grpc_opt paths=source_relative --grpc-gateway_out ./internal/pb --grpc-gateway_opt paths=source_relative ./pkg/proto/*.proto
